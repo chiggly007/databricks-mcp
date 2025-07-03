@@ -43,5 +43,9 @@ async def create_table(warehouse_id: str, statement: str) -> Dict[str, Any]:
 
 
 async def get_table_lineage(full_name: str) -> Dict[str, Any]:
-    endpoint = f"/api/2.1/unity-catalog/lineage-tracking/table-lineage/{full_name}"
-    return await make_api_request("GET", endpoint)
+    endpoint = "/api/2.0/lineage-tracking/table-lineage"
+    data = {
+        "table_name": full_name,
+        "include_entity_lineage": True  # optional, but recommended
+    }
+    return await make_api_request("GET", endpoint, data=data)

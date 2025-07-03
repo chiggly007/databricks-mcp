@@ -62,6 +62,27 @@ def print_jobs(jobs: List[Dict[str, Any]]) -> None:
         print(f"  Name: {job.get('settings', {}).get('name')}")
         print(f"  Created: {job.get('created_time')}")
 
+def print_sql_result(result: Dict[str, Any]) -> None:
+    """Print SQL query results."""
+    print_section_header("SQL Query Results")
+    
+    # Print basic execution info
+    print(f"Statement ID: {result.get('statement_id')}")
+    print(f"Status: {result.get('status', {}).get('state')}")
+    
+    # Print query results if available
+    query_result = result.get('result')
+    if query_result:
+        data_array = query_result.get('data_array', [])
+        if data_array:
+            print(f"Results:")
+            for i, row in enumerate(data_array, 1):
+                print(f"  Row {i}: {row}")
+        else:
+            print("No data returned")
+    else:
+        print("Query execution details not available")
+
 def main() -> None:
     """Main function for the direct usage example."""
     print("\nDatabricks MCP Server - Direct Usage Example")
@@ -103,9 +124,18 @@ def main() -> None:
         else:
             print_jobs(jobs_data.get('jobs', []))
         
+        # Execute SQL query - SELECT 1
+        logger.info("Executing SQL query: SELECT 1")
+        sql_result = server.execute_sql({"statement": "SELECT 1"})
+        sql_data = json.loads(sql_result)
+        if 'error' in sql_data:
+            logger.error(f"Error executing SQL: {sql_data['error']}")
+        else:
+            print_sql_result(sql_data)
+        
     except Exception as e:
         logger.error(f"An error occurred: {str(e)}")
         sys.exit(1)
 
 if __name__ == "__main__":
-    main() 
+    main()

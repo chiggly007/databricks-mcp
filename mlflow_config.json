@@ -1,0 +1,29 @@
+# filepath: /Users/chiragshah/PycharmProjects/databricks-mcp/mlflow_config.json
+{
+  "mcpServers": {
+    "mlflow": {
+      "command": "python",
+      "args": [
+        "-m", 
+        "databricks_mcp.server.mlflow_mcp_server"
+      ],
+      "env": {
+        "MLFLOW_TRACKING_URI": "http://localhost:5000",
+        "DATABRICKS_HOST": "https://your-databricks-workspace.cloud.databricks.com",
+        "DATABRICKS_TOKEN": "your-databricks-token"
+      }
+    },
+    "databricks-with-mlflow": {
+      "command": "python",
+      "args": [
+        "-m", 
+        "databricks_mcp.server.databricks_mcp_server"
+      ],
+      "env": {
+        "DATABRICKS_HOST": "https://your-databricks-workspace.cloud.databricks.com",
+        "DATABRICKS_TOKEN": "your-databricks-token",
+        "MLFLOW_TRACKING_URI": "databricks"
+      }
+    }
+  }
+}

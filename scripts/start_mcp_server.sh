@@ -27,6 +27,6 @@ if [ -n "$DATABRICKS_HOST" ]; then
     echo "Databricks Host: $DATABRICKS_HOST"
 fi
 
-python -m databricks_mcp.server.databricks_mcp_server
+/Users/chiragshah/PycharmProjects/databricks-mcp/.venv/bin/python -m databricks_mcp.server.databricks_mcp_server
 
 echo "Server stopped at $(date)" 

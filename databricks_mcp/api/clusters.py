@@ -25,7 +25,7 @@ async def create_cluster(cluster_config: Dict[str, Any]) -> Dict[str, Any]:
         DatabricksAPIError: If the API request fails
     """
     logger.info("Creating new cluster")
-    return await make_api_request("POST", "/api/2.0/clusters/create", data=cluster_config)
+    return await make_api_request("POST", "/api/2.1/clusters/create", data=cluster_config)
 
 
 async def terminate_cluster(cluster_id: str) -> Dict[str, Any]:
@@ -42,7 +42,7 @@ async def terminate_cluster(cluster_id: str) -> Dict[str, Any]:
         DatabricksAPIError: If the API request fails
     """
     logger.info(f"Terminating cluster: {cluster_id}")
-    return await make_api_request("POST", "/api/2.0/clusters/delete", data={"cluster_id": cluster_id})
+    return await make_api_request("POST", "/api/2.1/clusters/delete", data={"cluster_id": cluster_id})
 
 
 async def list_clusters() -> Dict[str, Any]:
@@ -56,7 +56,7 @@ async def list_clusters() -> Dict[str, Any]:
         DatabricksAPIError: If the API request fails
     """
     logger.info("Listing all clusters")
-    return await make_api_request("GET", "/api/2.0/clusters/list")
+    return await make_api_request("GET", "/api/2.1/clusters/list")
 
 
 async def get_cluster(cluster_id: str) -> Dict[str, Any]:
@@ -73,7 +73,7 @@ async def get_cluster(cluster_id: str) -> Dict[str, Any]:
         DatabricksAPIError: If the API request fails
     """
     logger.info(f"Getting information for cluster: {cluster_id}")
-    return await make_api_request("GET", "/api/2.0/clusters/get", params={"cluster_id": cluster_id})
+    return await make_api_request("GET", "/api/2.1/clusters/get", params={"cluster_id": cluster_id})
 
 
 async def start_cluster(cluster_id: str) -> Dict[str, Any]:
@@ -90,7 +90,7 @@ async def start_cluster(cluster_id: str) -> Dict[str, Any]:
         DatabricksAPIError: If the API request fails
     """
     logger.info(f"Starting cluster: {cluster_id}")
-    return await make_api_request("POST", "/api/2.0/clusters/start", data={"cluster_id": cluster_id})
+    return await make_api_request("POST", "/api/2.1/clusters/start", data={"cluster_id": cluster_id})
 
 
 async def resize_cluster(cluster_id: str, num_workers: int) -> Dict[str, Any]:
@@ -110,7 +110,7 @@ async def resize_cluster(cluster_id: str, num_workers: int) -> Dict[str, Any]:
     logger.info(f"Resizing cluster {cluster_id} to {num_workers} workers")
     return await make_api_request(
         "POST",
-        "/api/2.0/clusters/resize",
+        "/api/2.1/clusters/resize",
         data={"cluster_id": cluster_id, "num_workers": num_workers}
     )
 
@@ -129,4 +129,4 @@ async def restart_cluster(cluster_id: str) -> Dict[str, Any]:
         DatabricksAPIError: If the API request fails
     """
     logger.info(f"Restarting cluster: {cluster_id}")
-    return await make_api_request("POST", "/api/2.0/clusters/restart", data={"cluster_id": cluster_id})
+    return await make_api_request("POST", "/api/2.1/clusters/restart", data={"cluster_id": cluster_id})
