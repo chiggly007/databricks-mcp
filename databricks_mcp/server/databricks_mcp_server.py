@@ -217,6 +217,24 @@ class DatabricksMCPServer(FastMCP):
                 return [{"type": "text", "text": json.dumps({"error": str(e)})}]
 
         @self.tool(
+            name="get_job",
+            description="Get a Databricks job's configuration and parameters with parameter: job_id (required)",
+        )
+        async def get_job_tool(params: Dict[str, Any]) -> List[TextContent]:
+            logger.info(f"Getting job with params: {params}")
+            try:
+                actual_params = _unwrap_params(params)
+                job_id = actual_params.get("job_id")
+                if job_id is None:
+                    raise ValueError("job_id is required for get_job")
+
+                result = await jobs.get_job(job_id)
+                return [{"type": "text", "text": json.dumps(result)}]
+            except Exception as e:
+                logger.error(f"Error getting job: {str(e)}")
+                return [{"type": "text", "text": json.dumps({"error": str(e)})}]
+
+        @self.tool(
             name="run_notebook",
             description="Submit a one-time notebook run with parameters: notebook_path (required), existing_cluster_id (optional), base_parameters (optional)",
         )
