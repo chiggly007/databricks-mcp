@@ -49,6 +49,7 @@ dev = [
 [project.scripts]
 databricks-mcp-server = "databricks_mcp.server.databricks_mcp_server:main"
 databricks-mcp = "databricks_mcp.cli.commands:main"
+mlflow-mcp-server = "databricks_mcp.server.mlflow_mcp_server:main"
 
 [tool.hatch.build.targets.wheel]
 packages = ["databricks_mcp"]
