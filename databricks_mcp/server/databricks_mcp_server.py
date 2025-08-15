@@ -179,6 +179,29 @@ class DatabricksMCPServer(FastMCP):
                 return [{"type": "text", "text": json.dumps({"error": str(e)})}]
         
         @self.tool(
+            name="update_job",
+            description="Update an existing Databricks job with parameters: job_id (required), new_settings (required dict)",
+        )
+        async def update_job_tool(params: Dict[str, Any]) -> List[TextContent]:
+            logger.info(f"Updating job with params: {params}")
+            try:
+                actual_params = _unwrap_params(params)
+                job_id = actual_params.get("job_id")
+                new_settings = actual_params.get("new_settings")
+
+                # Basic validation
+                if job_id is None:
+                    raise ValueError("job_id is required for update_job")
+                if new_settings is None or not isinstance(new_settings, dict):
+                    raise ValueError("new_settings (dict) is required for update_job")
+
+                result = await jobs.update_job(job_id, new_settings)
+                return [{"type": "text", "text": json.dumps(result)}]
+            except Exception as e:
+                logger.error(f"Error updating job: {str(e)}")
+                return [{"type": "text", "text": json.dumps({"error": str(e)})}]
+
+        @self.tool(
             name="run_job",
             description="Run a Databricks job with parameters: job_id (required), notebook_params (optional)",
         )
@@ -1093,4 +1116,4 @@ def main():
 
 
 if __name__ == "__main__":
-    main() 
+    main()
