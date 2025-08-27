@@ -4,6 +4,7 @@ Utility functions for the Databricks MCP server.
 
 import json
 import logging
+import os
 from typing import Any, Dict, List, Optional, Union
 
 import httpx
@@ -59,7 +60,11 @@ async def make_api_request(
         safe_data = "**REDACTED**" if data else None
         logger.debug("API Request: %s %s Params: %s Data: %s", method, url, params, safe_data)
 
-        async with httpx.AsyncClient() as client:
+        # Check if SSL verification should be skipped (from centralized config)
+        from databricks_mcp.core.config import settings
+        verify_ssl = not settings.DATABRICKS_SKIP_VERIFY
+
+        async with httpx.AsyncClient(verify=verify_ssl) as client:
             response = await client.request(
                 method=method,
                 url=url,
@@ -67,7 +72,7 @@ async def make_api_request(
                 params=params,
                 json=data if not files else None,
                 data=data if files else None,
-                files=files,
+                files=files
             )
 
         response.raise_for_status()
@@ -77,16 +82,18 @@ async def make_api_request(
         return {}
 
     except HTTPError as e:
-        status_code = getattr(e.response, "status_code", None) if hasattr(e, "response") else None
+        # Extract response information from the exception
+        response = getattr(e, "response", None)
+        status_code = getattr(response, "status_code", None) if response else None
         error_msg = f"API request failed: {str(e)}"
 
         error_response = None
-        if hasattr(e, "response") and e.response is not None:
+        if response is not None:
             try:
-                error_response = e.response.json()
+                error_response = response.json()
                 error_msg = f"{error_msg} - {error_response.get('error', '')}"
             except ValueError:
-                error_response = e.response.text
+                error_response = response.text
 
         logger.error("API Error: %s", error_msg, exc_info=True)
 

@@ -34,6 +34,7 @@ class Settings(BaseSettings):
     DATABRICKS_HOST: str = os.environ.get("DATABRICKS_HOST", "https://example.databricks.net")
     DATABRICKS_TOKEN: str = os.environ.get("DATABRICKS_TOKEN", "dapi_token_placeholder")
     DATABRICKS_WAREHOUSE_ID: Optional[str] = os.environ.get("DATABRICKS_WAREHOUSE_ID")
+    DATABRICKS_SKIP_VERIFY: bool = os.environ.get("DATABRICKS_SKIP_VERIFY", "false").lower() in ("true", "1", "yes")
 
     # Server configuration
     SERVER_HOST: str = os.environ.get("SERVER_HOST", "0.0.0.0") 
